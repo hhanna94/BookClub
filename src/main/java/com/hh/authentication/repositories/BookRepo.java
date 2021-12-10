@@ -10,4 +10,8 @@ import com.hh.authentication.models.Book;
 @Repository
 public interface BookRepo extends CrudRepository<Book, Long>{
 	List<Book> findAll();
+	
+	List<Book> findByBorrowerIsNull();
+	
+	List<Book> findByBorrower(Long id);
 }

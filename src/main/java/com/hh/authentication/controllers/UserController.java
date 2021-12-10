@@ -46,6 +46,7 @@ public class UserController {
 			return "index.jsp";
 		}
 		session.setAttribute("user_id", user.getId());
+		System.out.println(session.getAttribute("user_id"));
 		return "redirect:/books";
 	}
 	

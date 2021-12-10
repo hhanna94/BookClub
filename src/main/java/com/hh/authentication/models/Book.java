@@ -45,6 +45,10 @@ public class Book {
     @JoinColumn(name="user_id")
     private User user;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="borrower_id")
+    private User borrower;
+    
     
     // ================================
     // CONSTRUCTOR
@@ -82,6 +86,9 @@ public class Book {
 	public User getUser() {
 		return user;
 	}
+	public User getBorrower() {
+		return borrower;
+	}
 
 	
     // ================================
@@ -113,6 +120,9 @@ public class Book {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public void setBorrower(User borrower) {
+		this.borrower = borrower;
 	}
 	@PrePersist
     protected void onCreate(){

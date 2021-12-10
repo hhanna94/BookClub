@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.hh.authentication.models.Book;
 import com.hh.authentication.models.User;
@@ -88,5 +90,43 @@ public class BookController {
 		} else {
 			return "redirect:/books";
 		}
+	}
+	
+	@GetMapping("/bookmarket")
+	public String bookMarket(Model model, HttpSession session) {
+		Long userID = (Long) session.getAttribute("user_id");
+		if (userID != null) {
+			User user = userService.findUser(userID);
+			model.addAttribute("user", user);
+			
+			List<Book> borrowedBooks = user.getBorrowedBooks();
+			model.addAttribute("borrowedBooks", borrowedBooks);
+		} else {
+			return "redirect:/";
+		}
+		
+		List<Book> availableBooks = bookService.getAvailableBooks();
+		model.addAttribute("availableBooks", availableBooks);
+		
+		return "lenderDashboard.jsp";
+	}
+	
+	@DeleteMapping("/books/{id}")
+	public String delete(@PathVariable("id") Long id) {
+		bookService.deleteBook(id);
+		return "redirect:/books";
+	}
+	
+	@PutMapping("/books/{id}/borrow")
+	public String borrowBook(@RequestParam(name="userID") Long userID, @PathVariable("id") Long bookID) {
+		User user = userService.findUser(userID);
+		bookService.borrowBook(bookID, user);
+		return "redirect:/bookmarket";
+	}
+	
+	@PutMapping("/books/{id}/return")
+	public String returnBook(@PathVariable("id") Long bookID) {
+		bookService.returnBook(bookID);
+		return "redirect:/bookmarket";
 	}
 }

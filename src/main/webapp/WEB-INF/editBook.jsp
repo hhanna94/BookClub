@@ -40,8 +40,13 @@
 	            <form:errors path="thoughts" class="text-danger" />
 	        </div>
 	        <form:hidden path="user" value="${user.id}"/>
+	        <form:hidden path="borrower" value="${book.borrower.id}" />
 	        <input type="submit" value="Submit" class="btn btn-primary" />
 	    </form:form>
+	    <form action="/books/${book.id}" method="post">
+			<input type="hidden" name="_method" value="delete" />
+			<input class="btn btn-danger" type="submit" value="delete" />
+		</form>
 	</div>
 </body>
 </html>

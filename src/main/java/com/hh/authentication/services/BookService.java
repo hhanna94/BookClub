@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import com.hh.authentication.models.Book;
+import com.hh.authentication.models.User;
 import com.hh.authentication.repositories.BookRepo;
 
 @Service
@@ -52,4 +53,35 @@ public class BookService {
 			return null;
 		}
 	}
+	
+	// Find books that haven't been borrowed
+	public List<Book> getAvailableBooks() {
+		List<Book> availableBooks = bookRepo.findByBorrowerIsNull();
+		return availableBooks;
+	}
+	
+	// Delete book
+	public void deleteBook(Long id) {
+		Book book = getOneBook(id);
+		bookRepo.delete(book);
+	}
+	
+	// Borrow a book
+	public void borrowBook(Long bookID, User user) {
+		Book book = getOneBook(bookID);
+		book.setBorrower(user);
+		bookRepo.save(book);
+	}
+	
+	
+	//Return a book
+	public void returnBook(Long bookID) {
+		Book book = getOneBook(bookID);
+		book.setBorrower(null);
+		bookRepo.save(book);
+	}
+	
+	
+	
+	
 }
